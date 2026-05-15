@@ -4,14 +4,11 @@ import 'package:personalizado/models/pokemons_model.dart';
 import 'package:personalizado/widgets/custom_buttom_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//1- Criar botao
-//2- Criar funçao para o botao chamar
-//3- Criar modelo de detahes do pokemon(mapear so oq eu quero no from json),
-//criar variavel valueNotifier com tipo sendo um modelo criado
-//4- ajustar funçao para bater na Api: pokemonClicado.url
-//5-Converter para detalhesDoPokemonModel
-//6- atualizar o valor do meu valueNotifier
-//7- criar o  ValueListenableBuilder
+
+// 1 - initstate para chamar a api / tirar botao
+// 2 - loading na tela enquanto api carrega
+// 3 - mudar nomes de varaveis e funcoes
+
 ValueNotifier<DetailsPokemonModel> detalhes =
     ValueNotifier<DetailsPokemonModel>(
       DetailsPokemonModel(id: 0, height: 0, name: "", weight: 0),
@@ -44,7 +41,6 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.pokemonClicado.url);
     return Scaffold(
       appBar: AppBar(title: Text(widget.pokemonClicado.name)),
       body: Center(
@@ -63,7 +59,7 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
               ),
               ValueListenableBuilder(
                 valueListenable: detalhes,
-                builder: (_, details, __) {
+                builder: (_, details, _) {
                   return details.id == 0 ? SizedBox() : Column(
                     children: [
                       Text('ID:${details.id.toString()} '),

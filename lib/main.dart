@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personalizado/views/todos_os_pokemons_page.dart';
+import 'package:personalizado/routes/app_routes.dart';
 
 
 void main() {
@@ -12,9 +12,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.blue,
+          centerTitle: true,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        useMaterial3: true,
+      ),
       debugShowCheckedModeBanner: false,
-      home:  TodosOsPokemonsPage(),
+      routes: AppRoutes.allRoutes,
+      initialRoute: AppRoutes.initial,
     );
-
   }
 }
