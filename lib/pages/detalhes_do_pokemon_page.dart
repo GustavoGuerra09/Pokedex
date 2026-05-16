@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personalizado/models/detalhes_do_pokemon_model.dart';
 import 'package:personalizado/models/pokemons_model.dart';
-import 'package:personalizado/widgets/custom_buttom_widget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,6 +13,8 @@ ValueNotifier<DetailsPokemonModel> detalhes =
       DetailsPokemonModel(id: 0, height: 0, name: "", weight: 0),
     );
 
+    ValueNotifier<bool> loading = ValueNotifier<bool> (false); 
+
 class DetalhesDoPokemonPage extends StatefulWidget {
   final PokemonModel pokemonClicado;
   const DetalhesDoPokemonPage({super.key, required this.pokemonClicado});
@@ -24,6 +25,8 @@ class DetalhesDoPokemonPage extends StatefulWidget {
 
 class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
   Future<void> buscaApi() async {
+    loading.value = true;
+    await Future.delayed(Duration(seconds: 2));
     Uri enderecoDaApi = Uri.parse(widget.pokemonClicado.url);
 
     var respostaDaApi = await http.get(enderecoDaApi);
@@ -32,31 +35,38 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
 
     final Map<String, dynamic> retorno = jsonDecode(respostaEmformatoDeString);
 
-    DetailsPokemonModel detalhesDePokemon = DetailsPokemonModel.fromJson(
-      retorno,
-    );
+    DetailsPokemonModel detalhesDePokemon = DetailsPokemonModel.fromJson(retorno);
+
+    loading.value = false;
 
     detalhes.value = detalhesDePokemon;
   }
+
+@override
+  void  initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      buscaApi();
+    });
+  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.pokemonClicado.name)),
-      body: Center(
+      body: ValueListenableBuilder(
+        valueListenable: loading,
+       builder: (context, isLoadingAPI, child) {
+        return Center(
+          child: isLoadingAPI
+          ? Center(child: CircularProgressIndicator())
+                : SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: CustomButtomWidget(
-                  disable: false,
-                  onPressed: () => buscaApi(),
-                  title: 'Buscar Detalhes do Pokemon',
-                  titleSize: 20,
-                ),
-              ),
+              
               ValueListenableBuilder(
                 valueListenable: detalhes,
                 builder: (_, details, _) {
@@ -66,16 +76,18 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
                       Text('Altura::${details.height.toString()}'),
                       Text('Name::${details.name}'),
                       Text('o Peso é ${details.weight}')
-
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+                                        
+                                      ],
+                                    );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+          );
+        },
       ),
     );
   }
 }
-

@@ -43,7 +43,8 @@ class _AllPokemonsPageState extends State<AllPokemonsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       buscarPokemons();
-    });
+    },
+    );
   }
 
   @override
