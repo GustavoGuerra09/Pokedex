@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:personalizado/extension/string_extension.dart';
 import 'package:personalizado/models/detalhes_do_pokemon_model.dart';
 import 'package:personalizado/models/pokemons_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 
 // 1 - initstate para chamar a api / tirar botao
 // 2 - loading na tela enquanto api carrega
@@ -50,11 +52,10 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
     });
   }
   
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.pokemonClicado.name)),
+      appBar: AppBar(title: Text(widget.pokemonClicado.name.firstLetterCapitalized)),
       body: ValueListenableBuilder(
         valueListenable: loading,
        builder: (context, isLoadingAPI, child) {
