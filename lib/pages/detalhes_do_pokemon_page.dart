@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:personalizado/controllers/detalhes_do_pokemon_page/detalhes_do_pokemon_controller.dart';
 import 'package:personalizado/extension/string_extension.dart';
-import 'package:personalizado/models/detalhes_do_pokemon_model.dart';
+import 'package:personalizado/models/detalhes_do_pokemon_model/detalhes_do_pokemon_model.dart';
 import 'package:personalizado/models/pokemons_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-// 1 - initstate para chamar a api / tirar botao
-// 2 - loading na tela enquanto api carrega
-// 3 - mudar nomes de varaveis e funcoes
-
-ValueNotifier<DetailsPokemonModel> detalhes =
-    ValueNotifier<DetailsPokemonModel>(
-      DetailsPokemonModel(
-        id: 0,
-        height: 0,
-        name: "",
-        weight: 0,
-        back_default: "",
-      ),
-    );
-
-ValueNotifier<bool> loading = ValueNotifier<bool>(false);
+import 'package:personalizado/widgets/detalhes_do_pokemon_page/card_pokemon.dart';
+import 'package:personalizado/widgets/detalhes_do_pokemon_page/detalhes_do_pokemon.dart';
+import 'package:personalizado/widgets/detalhes_do_pokemon_page/detalhes_do_pokemon_page_loading.dart';
+import 'package:personalizado/widgets/detalhes_do_pokemon_page/error_pokemon_nao_encontrado.dart';
+import 'package:personalizado/widgets/detalhes_do_pokemon_page/imagem_pokemon.dart';
 
 class DetalhesDoPokemonPage extends StatefulWidget {
   final PokemonModel pokemonClicado;
@@ -31,76 +18,55 @@ class DetalhesDoPokemonPage extends StatefulWidget {
 }
 
 class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
-  Future<void> buscaApi() async {
-    loading.value = true;
-    await Future.delayed(Duration(seconds: 2));
-    Uri enderecoDaApi = Uri.parse(widget.pokemonClicado.url);
-
-    var respostaDaApi = await http.get(enderecoDaApi);
-
-    String respostaEmformatoDeString = respostaDaApi.body;
-
-    final Map<String, dynamic> retorno = jsonDecode(respostaEmformatoDeString);
-
-    DetailsPokemonModel detalhesDePokemon = DetailsPokemonModel.fromJson(
-      retorno,
-    );
-
-    loading.value = false;
-
-    detalhes.value = detalhesDePokemon;
-  }
+  late DetalhesDoPokemonController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = DetalhesDoPokemonController(pokemonClicado: widget.pokemonClicado);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      buscaApi();
+      controller.buscarDetalhesDoPokemon();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.pokemonClicado.name.firstLetterCapitalized),
-      ),
+      appBar: AppBar(title: Text(widget.pokemonClicado.name.firstLetterCapitalized)),
       body: ValueListenableBuilder(
-        valueListenable: loading,
+        valueListenable: controller.loading,
         builder: (context, isLoadingAPI, child) {
-          return Center(
-            child: isLoadingAPI
-                ? Center(child: CircularProgressIndicator())
-                : SafeArea(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ValueListenableBuilder(
-                            valueListenable: detalhes,
-                            builder: (_, details, _) {
-                              return details.id == 0
-                                  ? SizedBox()
-                                  : Column(
-                                      children: [
-                                        Text('ID:${details.id.toString()} '),
-                                        Text(
-                                          'Altura::${details.height.toString()}',
-                                        ),
-                                        Text('Name::${details.name}'),
-                                        Text('o Peso é ${details.weight}'),
-                                        Image.network(details.back_default),
-                                      ],
-                                    );
-                            },
-                          ),
-                        ],
-                      ),
+          return isLoadingAPI
+            ? DetalhesDoPokemonPageLoading()
+            : SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: controller.detalhesDoPokemon,
+                      builder: (_, detalhesDoPokemonClicado, _) {
+                        final pokemonNaoFoiEncontrado = detalhesDoPokemonClicado.id == 0;
+                        return pokemonNaoFoiEncontrado
+                          ? ErrorPokemonNaoEncontrado()
+                          : Column(
+                            children: [
+                              ImagemPokemon(urlImagem: detalhesDoPokemonClicado.back_default),
+                              DetalhesDoPokemon(pokemonModel: detalhesDoPokemonClicado),
+                            ],
+                          );
+                      },
                     ),
-                  ),
-          );
+                  ],
+                ),
+              ),
+            );
         },
       ),
     );
   }
 }
+
+
+

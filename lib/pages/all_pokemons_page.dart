@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:personalizado/extension/string_extension.dart';
 import 'package:personalizado/models/pokemons_model.dart';
 import 'package:personalizado/routes/app_routes.dart';
+import 'package:personalizado/widgets/all_pokemons_page/lista_de_pokemons.dart';
 import 'package:personalizado/widgets/custom_buttom_widget.dart';
 
 class AllPokemonsPage extends StatefulWidget {
@@ -69,33 +70,7 @@ class _AllPokemonsPageState extends State<AllPokemonsPage> {
                               if (pokeList.isEmpty) ...{
                                 Text('Nenhum pokemon encontrado'),
                               } else ...{
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  child: ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    separatorBuilder: (context, index) => Divider(),
-                                    itemCount: pokeList.length,
-                                    itemBuilder: (context, index) {
-                                      final pokemonAtual = pokeList[index];
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pushNamed(
-                                            AppRoutes.detalhesDoPokemon,
-                                            arguments: pokemonAtual,
-                                          );
-                                        },
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            child: Text(index.toString()),
-                                          ),
-                                          title: Text(pokemonAtual.name.firstLetterCapitalized),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                                ListaDePokemons(pokeList: pokeList),
                                 CustomButtomWidget(
                                   title: 'Carregar mais pokemons >',
                                   onPressed: () {},
@@ -113,3 +88,4 @@ class _AllPokemonsPageState extends State<AllPokemonsPage> {
     );
   }
 }
+
