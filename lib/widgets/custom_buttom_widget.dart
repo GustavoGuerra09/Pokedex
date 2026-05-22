@@ -11,8 +11,7 @@ class CustomButtomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: disable  ? null : onPressed,
-     child: Text(title, style: TextStyle(color: Colors.white),), 
+    onPressed: disable  ? null : onPressed, 
      style: ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
         if(states.contains(WidgetState.disabled)) return Colors.purple;
@@ -27,6 +26,7 @@ class CustomButtomWidget extends StatelessWidget {
         return TextStyle(fontSize:titleSize);
       }),
      ),
+     child: Text(title, style: TextStyle(color: Colors.white),),
     );
   }
 }

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:personalizado/extension/string_extension.dart';
 import 'package:personalizado/models/pokemons_model.dart';
-import 'package:personalizado/routes/app_routes.dart';
 import 'package:personalizado/widgets/all_pokemons_page/lista_de_pokemons.dart';
 import 'package:personalizado/widgets/custom_buttom_widget.dart';
 

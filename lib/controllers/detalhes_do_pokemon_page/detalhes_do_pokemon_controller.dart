@@ -16,7 +16,7 @@ class DetalhesDoPokemonController {
           height: 0,
           name: "",
           weight: 0,
-          back_default: "",
+          backDefault: "",
         ),
       );
 

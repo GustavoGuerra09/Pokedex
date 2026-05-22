@@ -3,14 +3,14 @@ class DetailsPokemonModel {
   final int id;
   final String name;
   final int weight;
-  final String back_default;
+  final String backDefault;  
 
   DetailsPokemonModel({
     required this.height,
     required this.id,
     required this.name,
     required this.weight,
-    required this.back_default
+    required this.backDefault
   });
 
   factory DetailsPokemonModel.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class DetailsPokemonModel {
       id: json['id'],
       name: json['name'],
       weight: json['weight'],
-      back_default: json['sprites'] ['back_default']
+      backDefault: json['sprites']['back_default']
     );
   }
 }

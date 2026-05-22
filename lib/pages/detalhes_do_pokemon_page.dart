@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personalizado/controllers/detalhes_do_pokemon_page/detalhes_do_pokemon_controller.dart';
 import 'package:personalizado/extension/string_extension.dart';
-import 'package:personalizado/models/detalhes_do_pokemon_model/detalhes_do_pokemon_model.dart';
 import 'package:personalizado/models/pokemons_model.dart';
-import 'package:personalizado/widgets/detalhes_do_pokemon_page/card_pokemon.dart';
 import 'package:personalizado/widgets/detalhes_do_pokemon_page/detalhes_do_pokemon.dart';
 import 'package:personalizado/widgets/detalhes_do_pokemon_page/detalhes_do_pokemon_page_loading.dart';
 import 'package:personalizado/widgets/detalhes_do_pokemon_page/error_pokemon_nao_encontrado.dart';
@@ -52,7 +50,7 @@ class _DetalhesDoPokemonPageState extends State<DetalhesDoPokemonPage> {
                           ? ErrorPokemonNaoEncontrado()
                           : Column(
                             children: [
-                              ImagemPokemon(urlImagem: detalhesDoPokemonClicado.back_default),
+                              ImagemPokemon(urlImagem: detalhesDoPokemonClicado.backDefault),
                               DetalhesDoPokemon(pokemonModel: detalhesDoPokemonClicado),
                             ],
                           );
